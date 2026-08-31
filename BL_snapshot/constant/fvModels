@@ -1,0 +1,55 @@
+FoamFile
+{
+    version 2.0;
+    format  ascii;
+    class   dictionary;
+    object  fvModels;
+}
+
+buoyancy
+{
+    type    coded;
+    active  true;
+
+    codedCoeffs
+    {
+        cellZone        all;
+        field           U;
+
+        codeInclude
+        #{
+            #include "volFields.H"
+            #include "surfaceFields.H"
+        #};
+
+        codeAddSup
+        #{
+            const fvMesh& mesh = this->mesh();
+            const volScalarField& T = mesh.lookupObject<volScalarField>("T");
+            const volScalarField& S = mesh.lookupObject<volScalarField>("S");
+            const volVectorField& U = mesh.lookupObject<volVectorField>("U");
+
+            // --- Buoyancy: linear EOS, Boussinesq ---
+            const dimensionedVector g("g", dimensionSet(0,1,-2,0,0,0,0), vector(0, 0, 9.81));
+            const dimensionedScalar alpha("alpha", dimless/dimTemperature, 2.0e-4);
+            const dimensionedScalar beta ("beta",  dimless,                7.6e-4);
+            const dimensionedScalar T0   ("T0",    dimTemperature,         21.0);
+            const dimensionedScalar S0   ("S0",    dimless,                35.0);
+
+            volScalarField db("db", -alpha*(T - T0) + beta*(S - S0));
+            eqn += g*db;
+
+            // --- f-plane Coriolis (NH, lat 27N): a = (+f*Uy, -f*Ux, 0) ---
+            // Built componentwise via a rotation tensor, so it's sign-safe
+            // regardless of the z-down mesh convention.
+            const dimensionedScalar fCor("fCor", dimensionSet(0,0,-1,0,0,0,0), 6.62e-5);
+            const dimensionedTensor Rcor
+            (
+                "Rcor", dimless, tensor(0, 1, 0,  -1, 0, 0,  0, 0, 0)
+            );
+
+            volVectorField coriolis("coriolisSource", fCor*(Rcor & U));
+            eqn += coriolis;
+        #};
+    }
+}

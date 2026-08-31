@@ -1,0 +1,80 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format          ascii;
+    class           dictionary;
+    location        "system";
+    object          controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+solver          incompressibleFluid;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         86400;
+
+deltaT          2;
+
+writeControl    adjustableRunTime;
+
+writeInterval   75;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  6;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+adjustTimeStep  yes;
+
+maxCo           0.5;
+
+functions
+{
+    transport_T
+    {
+        type            scalarTransport;
+        libs            ( "libsolverFunctionObjects.so" );
+        field           T;
+        schemesField    T;
+        diffusivity     viscosity;
+        alphal          0.143;
+        alphat          1.176;
+        writeControl    writeTime;
+    }
+    transport_S
+    {
+        type            scalarTransport;
+        libs            ( "libsolverFunctionObjects.so" );
+        field           S;
+        schemesField    S;
+        diffusivity     viscosity;
+        alphal          0.0014;
+        alphat          1.176;
+        writeControl    writeTime;
+    }
+}
+
+maxDeltaT       1;
+
+
+// ************************************************************************* //
