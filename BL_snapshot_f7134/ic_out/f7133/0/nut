@@ -1,0 +1,44 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+|  \\    /  F ield         | OpenFOAM                                         |
+|   \\  /   O peration     |                                                 |
+|    \\/    M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      nut;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 2 -1 0 0 0 0];
+
+internalField   uniform 0;
+
+boundaryField
+{
+    surface
+    {
+        type            calculated;
+        value           uniform 0;
+    }
+    seabed
+    {
+        type            nutURoughWallFunction;
+        Ks              uniform 0.01;
+        Cs              uniform 0.5;
+        value           uniform 0;
+    }
+    left
+    {
+        type            cyclic;
+    }
+    right
+    {
+        type            cyclic;
+    }
+}
+
+// ************************************************************************* //
