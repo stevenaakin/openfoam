@@ -1,0 +1,6 @@
+# dynamicCode:
+# SHA1 = 13204e8ce69fe389c7f209808338402d752f1a3c
+
+codedFunctionObjectTemplate.C
+
+LIB = $(PWD)/../platforms/$(WM_OPTIONS)/lib/libmixingQualityCheck_13204e8ce69fe389c7f209808338402d752f1a3c
