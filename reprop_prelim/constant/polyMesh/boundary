@@ -1,0 +1,79 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  13
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       polyBoundaryMesh;
+    location    "constant/polyMesh";
+    object      boundary;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+6
+(
+    surface
+    {
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          2500;
+        startFace       737500;
+    }
+    seabed
+    {
+        type            wall;
+        inGroups        List<word> 1(wall);
+        nFaces          2500;
+        startFace       740000;
+    }
+    left
+    {
+        type            cyclic;
+        inGroups        List<word> 1(cyclic);
+        nFaces          5000;
+        startFace       742500;
+        matchTolerance  0.0001;
+        neighbourPatch  right;
+        transformType   translational;
+        separation      (-250 0 0);
+    }
+    right
+    {
+        type            cyclic;
+        inGroups        List<word> 1(cyclic);
+        nFaces          5000;
+        startFace       747500;
+        matchTolerance  0.0001;
+        neighbourPatch  left;
+        transformType   translational;
+        separation      (250 0 0);
+    }
+    front
+    {
+        type            cyclic;
+        inGroups        List<word> 1(cyclic);
+        nFaces          5000;
+        startFace       752500;
+        matchTolerance  0.0001;
+        neighbourPatch  back;
+        transformType   translational;
+        separation      (0 -250 0);
+    }
+    back
+    {
+        type            cyclic;
+        inGroups        List<word> 1(cyclic);
+        nFaces          5000;
+        startFace       757500;
+        matchTolerance  0.0001;
+        neighbourPatch  front;
+        transformType   translational;
+        separation      (0 250 0);
+    }
+)
+
+// ************************************************************************* //
